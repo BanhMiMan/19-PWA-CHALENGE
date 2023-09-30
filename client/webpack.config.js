@@ -26,9 +26,17 @@ module.exports = () => {
         template: './index.html', // Path to your HTML template
         title: "JATE"
       }),
-      
+       
+      // InjectManifest is used to configure and generate a service worker file.
+      new InjectManifest({
+        swSrc: './src-sw.js', // Path to your service worker source file
+        swDest: 'src-sw.js', // Output service worker file name
+      }),
+
       // WebpackPwaManifest is used to generate a web app manifest file.
       new WebpackPwaManifest({
+        fingerprints: false, 
+        inject: true,
         name: 'Just Another Text Editor',
         short_name: 'JATE',
         description: 'a text editor able to be used offline with IndexedDB',
@@ -44,12 +52,6 @@ module.exports = () => {
           },
         ],
       }),
-
-      // InjectManifest is used to configure and generate a service worker file.
-      new InjectManifest({
-        swSrc: './src-sw.js', // Path to your service worker source file
-        swDest: 'src-sw.js', // Output service worker file name
-      }),
     ],
 
 
@@ -57,7 +59,7 @@ module.exports = () => {
     module: {
       rules: [
         {
-          test: /\.css$/,
+          test: /\.css$/i,
           use: ['style-loader', 'css-loader'],
         },
         {
@@ -67,10 +69,7 @@ module.exports = () => {
             loader: "babel-loader",
             options: {
               presets: ["@babel/preset-env"],
-              plugins: [
-                "@babel/plugin-proposal-object-rest-spread",
-                "@babel/transform-runtime",
-              ],
+              plugins: ["@babel/plugin-proposal-object-rest-spread", "@babel/transform-runtime"],
             },
           },
         }
